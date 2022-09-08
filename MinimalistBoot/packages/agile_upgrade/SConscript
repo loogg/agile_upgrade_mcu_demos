@@ -23,7 +23,7 @@ if GetDepend(['AGILE_UPGRADE_ENABLE_FAL']):
     src += ['adapter/agile_upgrade_fal.c']
 
 if GetDepend(['AGILE_UPGRADE_ENABLE_FILE']):
-    src += ['agile_upgrade_file.c']
+    src += ['adapter/agile_upgrade_file.c']
 
 group = DefineGroup('agile_upgrade', src, depend = ['PKG_USING_AGILE_UPGRADE'], CPPPATH = CPPPATH)
 
