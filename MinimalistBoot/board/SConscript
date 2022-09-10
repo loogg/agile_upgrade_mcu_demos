@@ -10,13 +10,21 @@ cwd = GetCurrentDir()
 src = Split('''
 board.c
 CubeMX_Config/Src/stm32f4xx_hal_msp.c
+ports/agile_upgrade_onchip.c
 ''')
+
+if GetDepend(['BSP_UPGRADE_USING_W25Q']):
+    src += ['HardWare/SPI/spi.c']
+    src += ['HardWare/W25QXX/w25qxx.c']
+    src += ['ports/agile_upgrade_w25q.c']
+
 path =  [cwd]
 path += [cwd + '/CubeMX_Config/Inc']
 path += [cwd + '/ports']
 
-if GetDepend(['BSP_USING_SPI_FLASH']):
-    src += Glob('ports/spi_flash_init.c')
+if GetDepend(['BSP_UPGRADE_USING_W25Q']):
+    path += [cwd + '/HardWare/SPI']
+    path += [cwd + '/HardWare/W25QXX']
 
 startup_path_prefix = SDK_LIB
 

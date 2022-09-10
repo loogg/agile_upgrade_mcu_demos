@@ -26,15 +26,13 @@ STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
 STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_usart.c
 STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c
 STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c
+STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
+STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_qspi.c
 ''')
 
 if GetDepend(['RT_USING_I2C']):
     src += ['STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c']
     src += ['STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c']
-
-if GetDepend(['RT_USING_SPI']):
-    src += ['STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c']
-    src += ['STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_qspi.c']
 
 if GetDepend(['RT_USING_USB']):
     src += ['STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pccard.c']

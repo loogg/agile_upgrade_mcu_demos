@@ -32,15 +32,6 @@ menu "Onboard Peripheral Drivers"
         select BSP_USING_UART3
         default n
 
-
-    config BSP_USING_SPI_FLASH
-        bool "Enable SPI FLASH (W25Q128 spi1)"
-        select BSP_USING_SPI
-        select BSP_USING_SPI1
-        select RT_USING_SFUD
-        select RT_SFUD_USING_SFDP
-        default n
-
 endmenu
 
 menu "On-chip Peripheral Drivers"
@@ -144,47 +135,15 @@ menu "On-chip Peripheral Drivers"
         bool "Enable on-chip FLASH"
         default n
 
-    menuconfig BSP_USING_SPI
-        bool "Enable SPI BUS"
-        default n
-        select RT_USING_SPI
-        if BSP_USING_SPI
-            config BSP_USING_SPI1
-                bool "Enable SPI1 BUS"
-                default n
-
-            config BSP_SPI1_TX_USING_DMA
-                bool "Enable SPI1 TX DMA"
-                depends on BSP_USING_SPI1
-                default n
-
-            config BSP_SPI1_RX_USING_DMA
-                bool "Enable SPI1 RX DMA"
-                depends on BSP_USING_SPI1
-                select BSP_SPI1_TX_USING_DMA
-                default n
-
-            config BSP_USING_SPI2
-                bool "Enable SPI2 BUS"
-                default n
-
-            config BSP_SPI2_TX_USING_DMA
-                bool "Enable SPI2 TX DMA"
-                depends on BSP_USING_SPI2
-                default n
-
-            config BSP_SPI2_RX_USING_DMA
-                bool "Enable SPI2 RX DMA"
-                depends on BSP_USING_SPI2
-                select BSP_SPI2_TX_USING_DMA
-                default n
-        endif
-
  source "libraries/HAL_Drivers/Kconfig"
 
 endmenu
 
 menu "Board extended module Drivers"
+
+    config BSP_UPGRADE_USING_W25Q
+        bool "Enable upgrade W25Q adapter"
+        default n
 
 endmenu
 

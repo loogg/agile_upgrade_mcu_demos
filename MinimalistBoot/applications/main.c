@@ -2,12 +2,20 @@
 #include <agile_upgrade.h>
 #include "board.h"
 
+#ifdef BSP_UPGRADE_USING_W25Q
+#include "w25qxx.h"
+#endif
+
 #define DBG_TAG "main"
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
 
 #define BOOT_BKP      RTC_BKP_DR15
 #define BOOT_APP_ADDR 0x08080000UL
+
+#ifdef BSP_UPGRADE_USING_W25Q
+extern const struct agile_upgrade_ops agile_upgrade_w25q_ops;
+#endif
 
 extern const struct agile_upgrade_ops agile_upgrade_onchip_ops;
 
@@ -46,14 +54,24 @@ void boot_start_application(void) {
 }
 
 int main(void) {
-    int src_addr = 0x20000;
+#ifdef BSP_UPGRADE_USING_W25Q
+    W25QXX_Init();
+    uint32_t src_addr = 0;
+    agile_upgrade_t src_agu = {0};
+    src_agu.name = "download";
+    src_agu.len = 0x60000;
+    src_agu.user_data = &src_addr;
+    src_agu.ops = &agile_upgrade_w25q_ops;
+#else
+    uint32_t src_addr = 0x20000;
     agile_upgrade_t src_agu = {0};
     src_agu.name = "download";
     src_agu.len = 0x60000;
     src_agu.user_data = &src_addr;
     src_agu.ops = &agile_upgrade_onchip_ops;
+#endif
 
-    int dst_addr = 0x80000;
+    uint32_t dst_addr = 0x80000;
     agile_upgrade_t dst_agu = {0};
     dst_agu.name = "app";
     dst_agu.len = 0x60000;
