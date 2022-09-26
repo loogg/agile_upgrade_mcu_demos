@@ -29,10 +29,10 @@ test : $(OBJECTS)
 ./$(OBJDIR)/%.o : ./tinycrypt-1.1.0/src/%.c
 	${CC} -g -c $< -o $@ ${CFLAGS}
 
-./$(OBJDIR)/fastlz.o : ./fastlz-1.0.1/fastlz.c
+./$(OBJDIR)/%.o : ./fastlz-1.0.1/%.c
 	${CC} -g -c $< -o $@ ${CFLAGS}
 
-./$(OBJDIR)/quicklz.o : ./quicklz-1.0.1/quicklz.c
+./$(OBJDIR)/%.o : ./quicklz-1.0.1/%.c
 	${CC} -g -c $< -o $@ ${CFLAGS}
 
 clean :

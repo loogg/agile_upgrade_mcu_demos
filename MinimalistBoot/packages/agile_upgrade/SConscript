@@ -4,6 +4,7 @@ from building import *
 
 cwd      = GetCurrentDir()
 CPPPATH  = [cwd + '/inc']
+CPPPATH += [cwd + '/porting/rt-thread']
 
 src = Split('''
 src/agile_upgrade.c

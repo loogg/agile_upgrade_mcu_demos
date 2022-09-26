@@ -156,16 +156,32 @@
 /* Arduino libraries */
 
 
-/* Sensor libraries */
+/* Projects */
 
 
-/* Display libraries */
+/* Sensors */
 
 
-/* Timing libraries */
+/* Display */
 
 
-/* Project libraries */
+/* Timing */
+
+
+/* Data Processing */
+
+
+/* Data Storage */
+
+/* Communication */
+
+/* Device Control */
+
+/* Other */
+
+/* Signal IO */
+
+/* Uncategorized */
 
 #define SOC_FAMILY_STM32
 #define SOC_SERIES_STM32F4

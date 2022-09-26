@@ -60,3 +60,8 @@ doc/doxygen/output/*
 # Example
 example/test
 example/*.bin
+
+# tools
+!tools/ota_packager/*
+tools/ota_packager/rt_ota_packaging_tool.exe.config
+!tools/ota_packager_cli/*
