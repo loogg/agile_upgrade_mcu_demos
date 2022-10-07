@@ -26,6 +26,7 @@ void __rt_libc_exit(int status)
 }
 
 #ifdef RT_USING_MSH
+#ifdef RT_USING_HEAP
 int system(const char *command)
 {
     extern int msh_exec(char *cmd, rt_size_t length);
@@ -42,4 +43,5 @@ int system(const char *command)
     return ret;
 }
 RTM_EXPORT(system);
+#endif
 #endif

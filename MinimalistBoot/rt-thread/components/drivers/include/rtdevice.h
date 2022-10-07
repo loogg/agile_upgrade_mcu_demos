@@ -18,9 +18,11 @@
 #include "ipc/completion.h"
 #include "ipc/dataqueue.h"
 #include "ipc/workqueue.h"
+#ifdef RT_USING_DEVICE
 #include "ipc/waitqueue.h"
 #include "ipc/pipe.h"
 #include "ipc/poll.h"
+#endif
 #include "ipc/ringblk_buf.h"
 
 #ifdef __cplusplus

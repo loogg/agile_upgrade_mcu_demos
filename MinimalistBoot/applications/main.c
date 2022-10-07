@@ -1,6 +1,9 @@
 #include <rtthread.h>
 #include <agile_upgrade.h>
 #include "board.h"
+#ifdef RT_USING_FINSH
+#include "shell.h"
+#endif
 
 #ifdef BSP_UPGRADE_USING_W25Q
 #include "w25qxx.h"
@@ -10,8 +13,13 @@
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
 
-#define BOOT_BKP      RTC_BKP_DR15
-#define BOOT_APP_ADDR 0x08080000UL
+#define BOOT_BKP               RTC_BKP_DR15
+#define BOOT_APP_ADDR          0x08080000UL
+#define BOOT_SHELL_KEY_TIMEOUT 3
+
+#ifdef RT_USING_FINSH
+extern char rt_hw_console_readchar(void);
+#endif
 
 #ifdef BSP_UPGRADE_USING_W25Q
 extern const struct agile_upgrade_ops agile_upgrade_w25q_ops;
@@ -53,6 +61,22 @@ void boot_start_application(void) {
     app_func();
 }
 
+#ifdef RT_USING_FINSH
+static int boot_shell_key_check(void) {
+    rt_tick_t tick_timeout =
+        rt_tick_get() + rt_tick_from_millisecond(BOOT_SHELL_KEY_TIMEOUT * 1000);
+
+    while (rt_tick_get() - tick_timeout >= (RT_TICK_MAX / 2)) {
+        char ch = rt_hw_console_readchar();
+        if (ch == '\r' || ch == '\n') return RT_EOK;
+
+        rt_thread_mdelay(10);
+    }
+
+    return -RT_ERROR;
+}
+#endif
+
 int main(void) {
 #ifdef BSP_UPGRADE_USING_W25Q
     W25QXX_Init();
@@ -79,13 +103,23 @@ int main(void) {
     dst_agu.ops = &agile_upgrade_onchip_ops;
 
     int rc = agile_upgrade_release(&src_agu, &dst_agu, 0);
-    if (rc != RT_EOK) {
+    if (rc != AGILE_UPGRADE_EOK) {
+#ifdef RT_USING_FINSH
+        LOG_D("Press [Enter] key into shell in %d s...", BOOT_SHELL_KEY_TIMEOUT);
+        rc = boot_shell_key_check();
+        if (rc == RT_EOK) {
+            finsh_system_init();
+            return 0;
+        }
+        LOG_W("Wait shell key timeout.");
+#endif
         rc = agile_upgrade_verify(&dst_agu, NULL, 1);
-        if (rc != RT_EOK) {
+        if (rc != AGILE_UPGRADE_EOK) {
             LOG_W("Force the name:%s to run!", dst_agu.name);
         }
     }
 
+    LOG_I("Starting run.....");
     boot_app_enable();
 
     return 0;

@@ -11,7 +11,7 @@
 #define RT_THREAD_PRIORITY_32
 #define RT_THREAD_PRIORITY_MAX 32
 #define RT_TICK_PER_SECOND 1000
-#define IDLE_THREAD_STACK_SIZE 1024
+#define IDLE_THREAD_STACK_SIZE 256
 
 /* kservice optimization */
 
@@ -41,7 +41,7 @@
 
 #define RT_USING_COMPONENTS_INIT
 #define RT_USING_USER_MAIN
-#define RT_MAIN_THREAD_STACK_SIZE 2048
+#define RT_MAIN_THREAD_STACK_SIZE 1024
 #define RT_MAIN_THREAD_PRIORITY 10
 
 /* Device Drivers */
@@ -125,7 +125,6 @@
 
 #define PKG_USING_AGILE_UPGRADE
 #define AGILE_UPGRADE_ENABLE_LOG
-#define AGILE_UPGRADE_ENABLE_QUICKLZ
 #define AGILE_UPGRADE_ENABLE_VERSION_COMPARE
 #define PKG_USING_AGILE_UPGRADE_LATEST_VERSION
 #define PKG_AGILE_UPGRADE_VER_NUM 0x99999
@@ -149,9 +148,6 @@
 
 /* entertainment: terminal games and other interesting software packages */
 
-#define PKG_USING_QUICKLZ
-#define QLZ_COMPRESSION_LEVEL 3
-#define PKG_USING_QUICKLZ_V101
 
 /* Arduino libraries */
 
@@ -180,6 +176,7 @@
 /* Other */
 
 /* Signal IO */
+
 
 /* Uncategorized */
 

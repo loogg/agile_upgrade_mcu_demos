@@ -1,0 +1,6 @@
+# tools
+!tools/app.bin
+tools/*.rbl
+!tools/ota_packager/*
+tools/ota_packager/rt_ota_packaging_tool.exe.config
+!tools/ota_packager_cli/*

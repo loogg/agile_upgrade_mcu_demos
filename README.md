@@ -16,6 +16,7 @@
   | figures | 素材 |
   | MinimalistBoot | 极简 Bootloader |
   | RTT_Template | RT-Thread 完整版示例工程 |
+  | tools | 打包工具 |
 
 ## 2、Bootloader
 
@@ -39,13 +40,67 @@
 
 该方法可以使 `Bootloader` 就作为一个 OS 应用程序开发，需要跳转的时候就操作一下寄存器并软件复位即可。
 
-该仓库下所有的例子均使用此方法。
+该仓库下所有的 `Bootloader` 例子均使用此方法。
+
+以正点原子探索者开发板的 `STM32F4` 为例，将 `system_stm32f4xx.c` 文件的 `SystemInit` 函数修改：
+
+```C
+void boot_start_application(void);
+void SystemInit(void)
+{
+  boot_start_application();
+
+  ...
+}
+```
+
+`boot_start_application` 的实现为：
+
+```C
+typedef void (*boot_app_func)(void);
+void boot_start_application(void) {
+    __HAL_RCC_PWR_CLK_ENABLE();
+    HAL_PWR_EnableBkUpAccess();
+
+    RTC_HandleTypeDef RTC_Handler = {0};
+    RTC_Handler.Instance = RTC;
+    uint32_t bkp_data = HAL_RTCEx_BKUPRead(&RTC_Handler, BOOT_BKP);
+    HAL_RTCEx_BKUPWrite(&RTC_Handler, BOOT_BKP, 0);
+
+    if (bkp_data != 0xA5A5) return;
+
+    boot_app_func app_func = NULL;
+    uint32_t app_addr = BOOT_APP_ADDR;
+    if (((*(__IO uint32_t *)(app_addr + 4)) & 0xff000000) != 0x08000000) return;
+
+    /* 栈顶地址在 128K RAM 间 */
+    if (((*(__IO uint32_t *)app_addr) - 0x20000000) >= (STM32_SRAM_SIZE * 1024)) return;
+
+    app_func = (boot_app_func) * (__IO uint32_t *)(app_addr + 4);
+    /* Configure main stack */
+    __set_MSP(*(__IO uint32_t *)app_addr);
+    /* jump to application */
+    app_func();
+}
+```
+
+设置寄存器并软件复位的实现为：
+
+```C
+static void boot_app_enable(void) {
+    __disable_irq();
+    RTC_HandleTypeDef RTC_Handler = {0};
+    RTC_Handler.Instance = RTC;
+    HAL_RTCEx_BKUPWrite(&RTC_Handler, BOOT_BKP, 0xA5A5);
+    HAL_NVIC_SystemReset();
+}
+```
 
 ## 3、RT-Thread 完整版、RT-Thread Nano 及裸机对比
 
 ### 3.1、RTOS 与裸机
 
-很多人都会觉得裸机开发起来比 RTOS 简单并且编译出来的空间小的多，但以我的开发经验来说并非如此。
+很多人都会觉得裸机开发比 RTOS 简单并且编译出来的空间小的多，但以我的开发经验来说并非如此。
 
 1. 开发难易程度
 
@@ -55,7 +110,7 @@
 
       一级延时很好处理只需要改变 `task` 的再一次进入时间即可。
 
-      嵌套延时则需要加状态位并在函数中嵌套 switch case，程序非常臃肿。
+      嵌套延时则需要加状态位并在函数中嵌套 `switch case`，程序非常臃肿。
 
     - RTOS
 
@@ -111,3 +166,43 @@
   ```
 
 从上述数据可以得出结论：`RT-Thread 完整版` 通过裁剪可以完全媲美 `RT-Thread Nano`，所以首选 `RT-Thread 完整版`。
+
+## 4、Bootloader 工程使用
+
+[tools](./tools) 文件夹下包含了固件打包工具和应用层固件 `app.bin`，起始地址为 `0x08080000`。
+
+应用层分区如下：
+
+| name | flash_dev | offset | length |
+| --- | --- | --- | --- |
+| download_w25q   | W25Q128           | 0x00000000 | 0x00060000 |
+| download_onchip | onchip_flash_128k | 0x00000000 | 0x00060000 |
+| app             | onchip_flash_128k | 0x00060000 | 0x00060000 |
+
+在应用程序中下载固件需要使用 `ymodem_ota -p [dst]` 命令，`[dst]` 为目标分区 `download_w25q` 或 `download_onchip`。
+
+### 4.1、MinimalistBoot 使用
+
+该工程下提供 3 个配置文件，通过 `ENV` 工具的 `menuconfig` 导入配置后执行 `scons --target=mdk5 -s` 即可生成工程。
+
+配置文件分别为：`.config.minimal`、`.config.w25q_qlz` 和 `.config.shell_qlz`。
+
+- `.config.minimal`
+
+  极简 `Bootloader`，不支持压缩和加密类型固件，下载分区为 `download_onchip`。
+
+  ![map1](./figures/map1.png)
+
+- `.config.w25q_qlz`
+
+  支持 `quicklz` 方式压缩的固件，下载分区为 `download_w25q`。
+
+  ![map2](./figures/map2.png)
+
+- `.config.shell_qlz`
+
+  支持 `quicklz` 方式压缩的固件，升级失败可通过敲击键盘 `Enter` 键进入 `Shell`，下载分区为 `download_onchip`。
+
+  ![map3](./figures/map3.png)
+
+
