@@ -13,6 +13,7 @@
 
   | 名称 | 说明 |
   | ---- | ---- |
+  | FalBoot | 使用 fal 的 Bootloader |
   | figures | 素材 |
   | MinimalistBoot | 极简 Bootloader |
   | RTT_Template | RT-Thread 完整版示例工程 |
@@ -181,9 +182,13 @@ static void boot_app_enable(void) {
 
 在应用程序中下载固件需要使用 `ymodem_ota -p [dst]` 命令，`[dst]` 为目标分区 `download_w25q` 或 `download_onchip`。
 
+以下工程编译结果都是基于 `优化等级 0`。
+
 ### 4.1、MinimalistBoot 使用
 
 该工程下提供 3 个配置文件，通过 `ENV` 工具的 `menuconfig` 导入配置后执行 `scons --target=mdk5 -s` 即可生成工程。
+
+该工程未使用动态内存分配，故编译结果即为真实内存使用。
 
 配置文件分别为：`.config.minimal`、`.config.w25q_qlz` 和 `.config.shell_qlz`。
 

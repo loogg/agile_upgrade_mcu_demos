@@ -1,0 +1,12 @@
+[
+ {
+  "path": "/packages/system/agile_upgrade", 
+  "ver": "latest", 
+  "name": "AGILE_UPGRADE"
+ }, 
+ {
+  "path": "/packages/misc/quicklz", 
+  "ver": "v1.0.1", 
+  "name": "QUICKLZ"
+ }
+]
