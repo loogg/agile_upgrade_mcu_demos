@@ -21,20 +21,16 @@
 /* Inter-Thread communication */
 
 #define RT_USING_SEMAPHORE
-#define RT_USING_MUTEX
 
 /* Memory Management */
 
-#define RT_USING_SMALL_MEM
-#define RT_USING_SMALL_MEM_AS_HEAP
-#define RT_USING_HEAP
+#define RT_USING_NOHEAP
 
 /* Kernel Device Object */
 
-#define RT_USING_DEVICE
 #define RT_USING_CONSOLE
 #define RT_CONSOLEBUF_SIZE 128
-#define RT_CONSOLE_DEVICE_NAME "uart1"
+#define RT_CONSOLE_DEVICE_NAME "uart"
 #define RT_VER_NUM 0x40100
 #define ARCH_ARM
 #define RT_USING_CPU_FFS
@@ -54,11 +50,6 @@
 
 /* Device Drivers */
 
-#define RT_USING_DEVICE_IPC
-#define RT_USING_SERIAL
-#define RT_USING_SERIAL_V1
-#define RT_SERIAL_RB_BUFSZ 64
-#define RT_USING_PIN
 
 /* Using USB */
 
@@ -138,8 +129,6 @@
 
 #define PKG_USING_AGILE_UPGRADE
 #define AGILE_UPGRADE_ENABLE_LOG
-#define AGILE_UPGRADE_USING_CRC_TAB_CONST
-#define AGILE_UPGRADE_ENABLE_QUICKLZ
 #define AGILE_UPGRADE_ENABLE_FAL
 #define AGILE_UPGRADE_ENABLE_VERSION_COMPARE
 #define PKG_USING_AGILE_UPGRADE_LATEST_VERSION
@@ -164,9 +153,6 @@
 
 /* entertainment: terminal games and other interesting software packages */
 
-#define PKG_USING_QUICKLZ
-#define QLZ_COMPRESSION_LEVEL 3
-#define PKG_USING_QUICKLZ_V101
 
 /* Arduino libraries */
 
@@ -211,16 +197,12 @@
 
 /* Onboard Peripheral Drivers */
 
-#define BSP_USING_USB_TO_USART
 
 /* Enable File System */
 
 
 /* On-chip Peripheral Drivers */
 
-#define BSP_USING_GPIO
-#define BSP_USING_UART
-#define BSP_USING_UART1
 #define BSP_USING_ON_CHIP_FLASH
 
 /* Board extended module Drivers */

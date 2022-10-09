@@ -12,7 +12,6 @@
 #define __DRV_FLASH_H__
 
 #include <rtthread.h>
-#include "rtdevice.h"
 #include <rthw.h>
 #include <drv_common.h>
 
