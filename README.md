@@ -186,7 +186,7 @@ static void boot_app_enable(void) {
 
 ### 4.1、MinimalistBoot 使用
 
-该工程下提供 3 个配置文件，通过 `ENV` 工具的 `menuconfig` 导入配置后执行 `scons --target=mdk5 -s` 即可生成工程。
+该工程下提供 3 个配置文件，通过 `ENV` 工具的 `menuconfig` `Load` 配置并 `save` 为 **`.config`** 后执行 `scons --target=mdk5 -s` 即可生成工程。
 
 该工程未使用动态内存分配，故编译结果即为真实内存使用。
 
@@ -210,4 +210,32 @@ static void boot_app_enable(void) {
 
   ![map3](./figures/map3.png)
 
+### 4.2、FalBoot 使用
 
+该工程基于 `FAL` 组件，提供 4 个配置文件，通过 `ENV` 工具的 `menuconfig` `Load` 配置并 `save` 为 **`.config`** 后执行 `scons --target=mdk5 -s` 即可生成工程。
+
+配置文件分别为：`.config.minimal`、`.config.dev_qlz`、`.config.w25q_dev_qlz` 和 `.config.shell_dev_qlz`。
+
+- `.config.minimal`
+
+  不支持压缩和加密类型固件，下载分区为 `download_onchip`。
+
+  ![map4](./figures/map4.png)
+
+- `.config.dev_qlz`
+
+  使用了设备框架，支持 `quicklz` 方式压缩的固件，下载分区为 `download_onchip`。
+
+  ![map5](./figures/map5.png)
+
+- `.config.w25q_dev_qlz`
+
+  使用了设备框架，支持 `quicklz` 方式压缩的固件，下载分区为 `download_w25q`。
+
+  ![map6](./figures/map6.png)
+
+- `.config.shell_dev_qlz`
+
+  使用了设备框架，支持 `quicklz` 方式压缩的固件，升级失败可通过敲击键盘 `Enter` 键进入 `Shell`，下载分区为 `download_onchip`。
+
+  ![map7](./figures/map7.png)
